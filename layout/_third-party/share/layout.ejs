@@ -1,3 +1,11 @@
+<%
+    var checkShare = true;
+    if (page.share == false) {
+      checkShare = false;
+    }
+%>
+
+<% if (checkShare) { %>
 <div class="new-meta-item share -mob-share-list">
   <div class="-mob-share-list share-body">
     <% (theme.article.body.meta_library.share||[]).forEach(function(item){ %>
@@ -31,3 +39,6 @@
     <% }) %>
   </div>
 </div>
+<% } else { %>
+  <% page.share = false; %>
+<% } %>
