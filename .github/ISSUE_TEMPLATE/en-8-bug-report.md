@@ -21,23 +21,17 @@ assignees: ''
 <!-- Change [ ] to [x] to select. -->
 
 - [ ] No related issues can be searched in Issues.
-- [ ] Upgrade the theme to the latest version.
+- [ ] Upgrade the theme to the latest version. Your current version of volantis is:_________________
 - [ ] This problem also exists on the official website; or download the source code of the theme’s official website and run it. After certain steps, this problem can be reproduced.
 
 **Steps to reproduce**
 
 <!-- If you are unable to provide detailed steps to reproduce, it means that you are not clear about this, we may close your issue and it is recommended to follow the help process. (If you have located a specific code location, you don’t need to fill in the recurring steps. -->
 
-- [ ] Detailed reproduction steps
-
 1. xxx
 2. xxx
 3. xxx
 
-- [ ] Specific code location
-
-
-- [ ] Great, I can provide bug patches
 
 ## Environmental information <!-- Please provide the following information -->
 

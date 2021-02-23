@@ -1,7 +1,7 @@
 <% if (theme.rightmenu.enable == true && theme.rightmenu.layout.length > 0) { %>
   <% function loadmenu(obj) { %>
     <li>
-      <a class='vlts-menu fix-cursor-default' <%= obj.url ? 'href='+ url_for(obj.url)+'' : ''%>
+      <a class='vlts-menu fix-cursor-default <%= obj.toggle == 'darkmode' ? 'toggle-mode-btn' : ''%>' <%= obj.url ? 'href='+ url_for(obj.url)+'' : ''%>
         <% if (obj.rel) { %>
           rel="<%- obj.rel %>"
         <% } %>
@@ -24,7 +24,7 @@
   <div id="rightmenu-wrapper">
     <ul class="list-v rightmenu" id="rightmenu-content">
       <li class='option'>
-        <a class='vlts-menu opt fix-cursor-default' id='menu-copy-text' onclick='document.execCommand("copy")'><i class='fa fa-copy fa-fw'></i><%- __('rightmenu.copy_text') %></a>
+        <a class='vlts-menu opt fix-cursor-default' id='menu-copy-text' onclick="document.execCommand('copy')"><i class='fa fa-copy fa-fw'></i><%- __('rightmenu.copy_text') %></a>
         <hr id='hr-text'>
         <a class='vlts-menu opt fix-cursor-default' id='menu-copy-href'><i class='fa fa-link fa-fw'></i><%- __('rightmenu.copy_link') %></a>
         <a class='vlts-menu opt fix-cursor-default' id='menu-open-href'><i class='fa fa-external-link-square-alt fa-fw'></i><%- __('rightmenu.open_in_new_tab') %></a>
@@ -140,8 +140,10 @@
       if (href.length == 0) {
         // 选中文本
         if (window.getSelection().toString()) {
-          copyText.style.display = 'block';
-          hrText.style.display = 'block';
+          if ('<%= theme.plugins.clipboard.enable %>' == 'true') {
+            copyText.style.display = 'block';
+            hrText.style.display = 'block';
+          }
         }
       }
 
@@ -171,18 +173,13 @@
           copyHref.style.display = 'none';
         }
       }
-
-      // 有音乐播放器
-      if ('<%= theme.plugins.aplayer.enable %>' == true && ('<%- theme.rightmenu.layout %>'||[]).includes('music')) {
+      // 有音乐播放器 see: layout/_third-party/aplayer/script.ejs
+      <% if (theme.plugins.aplayer.enable && (theme.rightmenu.layout||[]).includes('music')) { %>
+      if(volantis.APlayerLoaded){ // APlayer加载完成？
         // 如果有aplayer，初始化一下
-      	try {
-      		checkAPlayer();
-          updateTitle();
-      	} catch (error) {
-      		console.log(error);
-      	}
+        checkAPlayer();
       }
-
+      <% } %>
       return false; // 该行代码确保系统自带的右键菜单不会被调出
     }
     function hideMenu() {
