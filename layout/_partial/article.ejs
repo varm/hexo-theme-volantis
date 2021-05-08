@@ -3,9 +3,9 @@
   <% if (page.layout == 'artitalk') { %>
     <div id="artitalk_main"></div>
   <% } %>
-  <% (post.photos||[]).forEach(function(photo){ %>
-    <div class='fancybox'><img src='<%- url_for(photo) %>'/></div>
-  <% }) %>
+  <% if (page.layout == 'bb') { %>
+    <div id="bbtalk"></div>
+  <% } %>
   <%- post.content %>
   <% if (page.link) { %>
     <div class='div-ori-link'>
@@ -45,7 +45,7 @@
         )
         %>
       <% } %>
-      <% if (['post'].includes(page.layout) && footer_widget.copyright && footer_widget.copyright.enable == true) { %>
+      <% if (['post'].includes(page.layout) && footer_widget.copyright && footer_widget.copyright.enable == true && post.copyright != false) { %>
         <div class='copyright'>
           <blockquote>
             <% (footer_widget.copyright.content||[]).forEach(function(row){ %>

@@ -19,12 +19,20 @@
     <% } %>
   <% } %>
   <!-- 渲染优化 -->
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <meta name="renderer" content="webkit">
   <meta name="force-rendering" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
   <meta name="HandheldFriendly" content="True" >
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <% if (theme.use_cdn && theme.info.cdn && theme.info.cdn.css.first) { %>
+  <link rel="preload" href="<%- theme.info.cdn.css.first %>" as="style">
+  <% } else { %>
+  <link rel="preload" href="<%- url_for("/css/first.css") %>" as="style">
+  <% } %>
 
   <!-- 页面元数据 -->
   <%
@@ -45,6 +53,13 @@
     } else if (is_home() && page.prev == 0) {
       keywords = config.keywords || '';
       description = config.description || '';
+    } else {
+      if ((page.layout == 'docs') && page.group && (page.group in theme.sidebar.widget_library)) {
+        let widget = theme.sidebar.widget_library[page.group];
+        if ((widget.class == 'group') && widget.seo_title) {
+          title = widget.seo_title + ": " + title;
+        }
+      }
     }
     if (theme.seo && theme.seo.use_tags_as_keywords) {
       if (!keywords && page.tags && page.tags.length > 0) {
@@ -84,30 +99,8 @@
   <% } %>
 
   <!-- link -->
-  <% if (theme.plugins.fontawesome) { %>
-    <%- css(theme.plugins.fontawesome) %>
-  <% } %>
-  <% if (theme.plugins.fontawesome_animation.enable) { %>
-    <%- css(theme.plugins.fontawesome_animation.css) %>
-  <% } %>
-  <% if (theme.plugins.fancybox) { %>
-    <%- css(theme.plugins.fancybox) %>
-  <% } %>
-
-  <% if (theme.plugins.nodewaves.enable) { %>
-    <%- css(theme.plugins.nodewaves.css) %>
-  <% } %>
-
   <% if (config.favicon) { %>
     <link rel="shortcut icon" type='image/x-icon' href="<%- url_for(config.favicon) %>">
-  <% } %>
-
-  <% if (theme.plugins.aplayer.enable) { %>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
-  <% } %>
-
-  <% if (theme.comments.service == 'vssue') { %>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/meteorlxy/vssue@1.4.4/packages/vssue/dist/vssue.min.css">
   <% } %>
 
   <!-- import link -->
@@ -116,43 +109,21 @@
   <%- item %><% }) %>
   <% } %>
 
-  <% if (theme.plugins.highlightjs.enable == true) { %>
-    <% if (theme.plugins.highlightjs.css) { %>
-      <%- css(theme.plugins.highlightjs.css) %>
-    <% } %>
-  <% } %>
-  <% if (config.use_cdn && theme.info.cdn && theme.info.cdn.css) { %>
-    <%- css(theme.info.cdn.css) %>
+  <% if (theme.use_cdn && theme.info.cdn && theme.info.cdn.css.first) { %>
+    <%- css(theme.info.cdn.css.first) %>
   <% } else { %>
-    <%- css('css/style.css') %>
+    <%- css('/css/first.css') %>
   <% } %>
-  <% if (config.google_analytics_key) { %>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script>
-	setTimeout(function() {
-  	  window.ga_tid = '<%- config.google_analytics_key %>';
- 	   (function() {
- 	     var dga = document.createElement("script");
- 	     dga.src = "https://rmt.dogedoge.com/fetch/public/ga.js";
-	      var s = document.getElementsByTagName("script")[0];
-	      s.parentNode.insertBefore(dga, s);
-	  })();
-	}, 5000);
-    </script>
+
+  <% if (theme.use_cdn && theme.info.cdn && theme.info.cdn.css.style) { %>
+  <link rel="stylesheet" href="<%- theme.info.cdn.css.style %>" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="<%- theme.info.cdn.css.style %>"></noscript>
+  <% } else { %>
+  <link rel="stylesheet" href="<%- url_for("/css/style.css") %>" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="<%- url_for("/css/style.css") %>"></noscript>
   <% } %>
-  <% if (config.baidu_analytics_key) { %>
-    <!-- ba -->
-    <script>
-    var _hmt = _hmt || [];
-    (function() {
-	  setTimeout(function() {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?<%= config.baidu_analytics_key %>";
-		hm.defer=true;
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-	  }, 5000);
-    })();
-    </script>
-  <% } %>
+
+  <script id="loadcss"></script>
+
+  <%- partial('../_third-party/end-of-support/script') %>
 </head>
